@@ -1,10 +1,14 @@
+#include <csignal>
 #include <getopt.h>
+#include <syslog.h>
 
 #include "ServerService.h"
 #include "ClientService.h"
 #include "Transport.h"
 
 using namespace std;
+
+ORU::ServerService* ssInstance;
 
 /**
  * \brief List of possible services
@@ -106,6 +110,12 @@ void parseArgs(int argc, char** argv, Options& opt)
     }
 }
 
+void signal_handler(int signal_num)
+{
+    ssInstance->quit();
+    exit(signal_num);
+}
+
 /**
  * \brief Main.
  *
@@ -137,6 +147,9 @@ int main(int argc, char* argv[])
     {
         if (opt.act == ACT_RUN)
         {
+            openlog("simple-service", LOG_NDELAY, LOG_LOCAL0);
+            ssInstance = &ss;
+            signal(SIGUSR1, signal_handler);
             return ss.run();
         }
         else

@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <cstdint>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
